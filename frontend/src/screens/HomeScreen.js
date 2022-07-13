@@ -19,7 +19,7 @@ const HomeScreen = () => {
   return (
     <>
       <Heading as="h2" mb="8" fontSize="3xl">
-        Latest Products
+        Latest Product
       </Heading>
 
       {loading ? (

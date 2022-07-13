@@ -25,6 +25,9 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
+  USER_DETAIL_REQUEST,
+  USER_DETAIL_SUCCESS,
+  USER_DETAIL_FAIL,
 } from "../constants/userConstants";
 import { ORDER_MY_LIST_RESET } from "../constants/orderConstants";
 
@@ -232,6 +235,34 @@ export const updateUser = (user) => async (dispatch, getState) => {
   } catch (err) {
     dispatch({
       type: USER_UPDATE_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const getUserDetail = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DETAIL_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_DETAIL_SUCCESS,
+      payload: data,
+    });
+  } catch (err) {
+    dispatch({
+      type: USER_DETAIL_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message
